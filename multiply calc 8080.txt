@@ -1,0 +1,39 @@
+           ORG 800h ; Początek programu adres pod którym znajduje się kod pierwszego rozkazu naszego programu – jest to miejsce w
+                    ; pamięci operacyjnej, od którego procesor ma rozpocząć wykonywanie programu.
+
+ZLALICZBA  mvi a,0 ; załadowanie akumulatora wartością 0, etykieta odnosi sie do skoku w przypadku podania złej liczby w którym przypadku zmieni się flaga znaku i nastąpi skok do tego miejsca
+           add a   ; Dodanie do akumulatora jego zawartości A = A+A żeby zmienić flage znaku w przypadku gdy podana liczba bedzie nieprawidłowa (wieksza niz 255)
+           LXI H,POCZATEK ; Przesłanie do HL 'Kalkulator - mnożenie@'
+           RST 3          ; wypisanie zawartości hl  na ekran aż do pojawienia się @
+           LXI H,0        ; wyzerowanie hl
+           LXI H,PIERWSZA ; Przasłanie do HL 'podaj liczbe 1 @'      
+           RST 3          ; wypisanie zawartości hl  na ekran aż do pojawienia się @
+           RST 5          ; RST umożliwiający wpisanie 4 znaków heksadecymalnych do rejestrów DE
+           MOV B,D        ; przesłanie danych z D do B 
+           MOV C,E        ; przeslanie danych z E do C 
+           LXI H,0        ; wyzerowanie hl 
+           LXI H,DRUGA    ; Przasłanie do HL 'podaj liczbe 2 @'   
+           RST 3          ; wypisanie zawartości hl  na ekran aż do pojawienia się @
+           RST 5          ; RST umożliwiający wpisanie 4 znaków heksadecymalnych do rejestrów DE
+           SUB B          ; odjecie od akumulatora zawartosci B w celu sprawdzenia czy rejestr B zawiera inną wartość niż 0 co powoduje że liczba nie jest jednobajtowa tzn zawiera część wartości na B i C 
+           SUB D          ; odjecie od akumulatora zawartosci D w celu sprawdzenia czy rejestr D zawiera inną wartość niż 0 co powoduje że liczba nie jest jednobajtowa tzn zawiera część wartości na D i E
+           JM ZLALICZBA   ; Jeżeli od akumulatora którego wartość wynosi 0 odejmiemy wartość większą niż 0 wtedy zmienia sie flaga znaku Sign(F) = 1(JM jump if minus) spowoduje przeskok do ZLALICZBA
+           LXI H,0        ; wyzerowanie hl
+           LXI H,WYNIK    ; Przasłanie do HL 'Wynik @' 
+           RST 3          ; wypisanie zawartości hl  na ekran aż do pojawienia się @ 
+	   LXI H,0        ; wyzerowanie hl 
+           MOV A,E        ; przeniesienie do akumulatora wartości rejestru E, wartość ta będzie wykorzystywana jako licznik
+
+ZERO       DAD B          ; Dodawanie do rejestrów hl zawartosci rejestrow bc 
+           DCR A          ; dekrementacja licznika 
+           JNZ ZERO       ; dopoki licznik jest różny (flaga zera ostatniej operacji jest rowna Zero flag = 0)  od zera to skok do ZERO i kontynuowanie mnozenia
+           MOV A,H        ; przeniesienie do akumulatora wartości z h
+           RST 4          ; wypisanie 2 znaków heksadecymalnych z akumulatora na ekran
+           MOV A,L        ; przeniesienie do akumulatora wartości z l
+           RST 4          ; wypisanie 2 znaków heksadecymalnych z akumulatora na ekran
+           HLT            ; koniec programu
+
+POCZATEK  DB 10,13,'KALKULATOR - MNOZENIE@'
+PIERWSZA  DB 10,13,'PODAJ LICZBE (1) > @'
+DRUGA     DB 10,13,'PODAJ LICZBE (2) > @'
+WYNIK     DB 10,13,'Wynik :  @'
