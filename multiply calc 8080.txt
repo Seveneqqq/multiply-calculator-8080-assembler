@@ -1,8 +1,8 @@
-           ORG 800h ; Początek programu adres pod którym znajduje się kod pierwszego rozkazu naszego programu – jest to miejsce w
-                    ; pamięci operacyjnej, od którego procesor ma rozpocząć wykonywanie programu.
+           ORG 800h	  ; Początek programu adres pod którym znajduje się kod pierwszego rozkazu naszego programu – jest to miejsce w
+                   	  ; pamięci operacyjnej, od którego procesor ma rozpocząć wykonywanie programu.
 
-ZLALICZBA  mvi a,0 ; załadowanie akumulatora wartością 0, etykieta odnosi sie do skoku w przypadku podania złej liczby w którym przypadku zmieni się flaga znaku i nastąpi skok do tego miejsca
-           add a   ; Dodanie do akumulatora jego zawartości A = A+A żeby zmienić flage znaku w przypadku gdy podana liczba bedzie nieprawidłowa (wieksza niz 255)
+ZLALICZBA  mvi a,0 	  ; załadowanie akumulatora wartością 0, etykieta odnosi sie do skoku w przypadku podania złej liczby w którym przypadku zmieni się flaga znaku i nastąpi skok do tego miejsca
+           add a   	  ; Dodanie do akumulatora jego zawartości A = A+A żeby zmienić flage znaku w przypadku gdy podana liczba bedzie nieprawidłowa (wieksza niz 255)
            LXI H,POCZATEK ; Przesłanie do HL 'Kalkulator - mnożenie@'
            RST 3          ; wypisanie zawartości hl  na ekran aż do pojawienia się @
            LXI H,0        ; wyzerowanie hl
